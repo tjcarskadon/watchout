@@ -1,3 +1,15 @@
+
+active:
+
+
+Complete:
+
 Draw the enemies in an svg element.
--make one enemy in an svg element
--make many enemies with random positions
+  -make one enemy in an svg element
+  -make many enemies with random positions
+
+Nice to have:
+-keyboard control
+-Asteroids
+-using force
+-asteroids run away from user
