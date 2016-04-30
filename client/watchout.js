@@ -7,19 +7,14 @@ var svg = d3.select('body').append('svg')
   .attr('height', svgHeight)
   .attr('width', svgWidth);
 
-// svg.append("circle")
-//   .attr('r', 50)
-//   .attr('cx', 400)
-//   .attr('cy', 100);
 
-
-var makeCircles = function(n) {
+var makeEnemies = function(n) {
 
   let result = [];
   for (let i = 0; i < n; i++) {
-    let circle = {};
-    circle.name = i;
-    result.push(circle);
+    let enemy = {};
+    enemy.name = i;
+    result.push(enemy);
   }
   return result;
 
@@ -34,25 +29,37 @@ var setPositions = function(array) {
   }
 };
 
-var circleArray = makeCircles(20);
+var enemyArmy = makeEnemies(20);
 
-var updateCircles = function () {
-  setPositions(circleArray);
-  var circles = svg.selectAll('circle')
-      .data(circleArray, function (d) { return d.name; });
+var updateEnemies = function () {
+  setPositions(enemyArmy);
+  var enemies = svg.selectAll('.enemy')
+      .data(enemyArmy, function (d) { return d.name; });
     
 
-  circles.transition()
+  enemies.transition()
     .duration(1000)
     .attr('cx', function(d) { return d.x; })
     .attr('cy', function(d) { return d.y; });
   
   
-  circles.enter()
+  enemies.enter()
     .append('circle')
+    .attr('class', 'enemy')
     .attr('cx', function(d) { return d.x; })
     .attr('cy', function(d) { return d.y; })
     .attr('r', rad);
 };
 
-setInterval(updateCircles, 1000);
+
+var player = svg.selectAll('.player')
+  .data([{name: 'hiro '}])
+  .enter()
+  .append('circle')
+  .attr('class', 'player')
+  .attr('cx', svgWidth / 2)
+  .attr('cy', svgHeight / 2)
+  .attr('r', rad)
+  .style('fill', 'purple');
+
+setInterval(updateEnemies, 1000);
