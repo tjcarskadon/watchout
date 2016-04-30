@@ -30,7 +30,7 @@ var setPositions = function(array) {
 };
 
 //make our array of enemies
-var enemyArmy = makeEnemies(20);
+var enemyArmy = makeEnemies(1);
 
 //function to update random enemy locations
 var updateEnemies = function () {
@@ -54,24 +54,60 @@ var updateEnemies = function () {
 };
 
 var drag = d3.behavior.drag()
-    .on("drag", dragged);
     // .origin(function(d) { return d; })
+    .on('drag', dragged);
 
 function dragged(d) {
-  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+  d3.select(this).attr("cx", d.x = d3.event.x)
+  .attr("cy", d.y = d3.event.y);
 }
 
 
 var player = svg.selectAll('.player')
-  .data([{name: 'hiro '}])
+  .data([{name: 'hiro ', x: svgWidth / 2, y: svgHeight / 2}])
   .enter()
   .append('circle')
   .attr('class', 'player')
-  .attr('cx', svgWidth / 2)
-  .attr('cy', svgHeight / 2)
-  .attr('r', rad)
+  .attr('cx', function(d) { return d.x; })
+  .attr('cy', function(d) { return d.y; })
+  .attr('r', 100)
   .style('fill', 'purple')
   .call(drag);
 
 
-setInterval(updateEnemies, 1000);
+var collide = function () {
+  let enemies = svg.selectAll('.enemy').data();
+  let player = svg.selectAll('.player').data();
+
+d3.selectAll(".enemy").each( function(d, i){
+    console.log( d3.select(this).attr("cx") );
+})
+
+  var pLeft = player[0].x - 100;
+  var pTop = player[0].y - 100;
+  var pRight = player[0].x + 100;
+  var pBottom = player[0].y + 100;
+
+  for (var i = 0; i < enemies.length; i++) {
+    var eLeft = enemies[i].x - rad;
+    var eTop = enemies[i].y - rad;
+    var eRight = enemies[i].x + rad;
+    var eBottom = enemies[i].y + rad;
+
+    // if (pLeft > eRight || pTop < eBottom || pRight < eLeft || pBottom > eTop) {
+    //   return true;
+    // }
+
+    if (pLeft < eRight && pRight > eLeft && pTop < eBottom && pBottom > eTop) {
+        console.log("collision");
+        return true;
+    }
+
+
+  }
+  console.log(" not collision");
+  return false;
+};
+
+setInterval(updateEnemies, 500);
+setInterval(collide, 1);
