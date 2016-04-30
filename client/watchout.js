@@ -29,8 +29,10 @@ var setPositions = function(array) {
   }
 };
 
+//make our array of enemies
 var enemyArmy = makeEnemies(20);
 
+//function to update random enemy locations
 var updateEnemies = function () {
   setPositions(enemyArmy);
   var enemies = svg.selectAll('.enemy')
@@ -51,6 +53,14 @@ var updateEnemies = function () {
     .attr('r', rad);
 };
 
+var drag = d3.behavior.drag()
+    .on("drag", dragged);
+    // .origin(function(d) { return d; })
+
+function dragged(d) {
+  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+}
+
 
 var player = svg.selectAll('.player')
   .data([{name: 'hiro '}])
@@ -60,6 +70,8 @@ var player = svg.selectAll('.player')
   .attr('cx', svgWidth / 2)
   .attr('cy', svgHeight / 2)
   .attr('r', rad)
-  .style('fill', 'purple');
+  .style('fill', 'purple')
+  .call(drag);
+
 
 setInterval(updateEnemies, 1000);
